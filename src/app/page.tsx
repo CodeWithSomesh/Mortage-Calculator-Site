@@ -251,9 +251,9 @@ export default function Home() {
           <Button
             className="w-full"
             size="lg"
-            // onClick={() => {
-            //   setCalculated(true)}
-            // }
+            onClick={() => {
+              setCalculated(true)}
+            }
           >
             Calculate
           </Button>
