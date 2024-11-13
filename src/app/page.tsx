@@ -20,7 +20,7 @@ export default function Home() {
   const [loanAmount, setLoanAmount] = useState("500000")
   const [interestRate, setInterestRate] = useState("4")
   const [loanTerm, setLoanTerm] = useState("30")
-  const [calculated, setCalculated] = useState(true)
+  const [calculated, setCalculated] = useState(false)
 
   const calculateLoan = () => {
     const principal = parseFloat(loanAmount)
@@ -238,8 +238,8 @@ export default function Home() {
               )}
             </TabsContent>
 
-            //Personal Details Tab
             <TabsContent value="personal">
+              {/* Personal Details Tab */}
               <div className="flex h-[400px] items-center justify-center">
                 <p className="text-sm text-muted-foreground">
                   Personal details form coming soon...
@@ -251,9 +251,9 @@ export default function Home() {
           <Button
             className="w-full"
             size="lg"
-            onClick={() => {
-              setCalculated(true)}
-            }
+            // onClick={() => {
+            //   setCalculated(true)}
+            // }
           >
             Calculate
           </Button>
