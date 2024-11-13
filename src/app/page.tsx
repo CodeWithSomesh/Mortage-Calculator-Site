@@ -1,101 +1,265 @@
-import Image from "next/image";
+"use client"
+
+import { useState } from "react"
+import { Calculator, Calendar, Percent } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Mortage Calculator Site</li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const [loanAmount, setLoanAmount] = useState("500000")
+  const [interestRate, setInterestRate] = useState("4")
+  const [loanTerm, setLoanTerm] = useState("30")
+  const [calculated, setCalculated] = useState(true)
+
+  const calculateLoan = () => {
+    const principal = parseFloat(loanAmount)
+    const rate = parseFloat(interestRate) / 100 / 12
+    const months = parseFloat(loanTerm) * 12
+    const monthlyPayment =
+      (principal * rate * Math.pow(1 + rate, months)) /
+      (Math.pow(1 + rate, months) - 1)
+    const totalPayment = monthlyPayment * months
+    const totalInterest = totalPayment - principal
+
+    return {
+      monthlyPayment,
+      totalPayment,
+      totalInterest,
+    }
+  }
+
+  const results = calculateLoan()
+
+  return (
+    <div className="mx-auto max-w-4xl p-4 md:p-6 lg:p-8">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold">Loan Calculator</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Calculate your mortgage and check bank eligibility
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <Tabs defaultValue="mortgage" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="mortgage">Mortgage Calculator</TabsTrigger>
+              <TabsTrigger value="personal">Personal Details</TabsTrigger>
+            </TabsList>
+            <TabsContent value="mortgage" className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-3">
+                <div className="space-y-2">
+                  <Label htmlFor="loan-amount">Loan Amount (RM)</Label>
+                  <Input
+                    id="loan-amount"
+                    placeholder="Enter loan amount"
+                    value={loanAmount}
+                    onChange={(e) => setLoanAmount(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="interest-rate">Interest Rate (%)</Label>
+                  <Input
+                    id="interest-rate"
+                    placeholder="Enter interest rate"
+                    value={interestRate}
+                    onChange={(e) => setInterestRate(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="loan-term">Loan Term (years)</Label>
+                  <Select
+                    value={loanTerm}
+                    onValueChange={(value) => setLoanTerm(value)}
+                  >
+                    <SelectTrigger id="loan-term">
+                      <SelectValue placeholder="Select term" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[5, 10, 15, 20, 25, 30, 35].map((year) => (
+                        <SelectItem key={year} value={year.toString()}>
+                          {year} years
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {calculated && (
+                <div className="space-y-6">
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm font-medium">Loan Start</span>
+                        </div>
+                        <p className="mt-2 text-2xl font-bold">Nov, 2024</p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="flex items-center gap-2">
+                          <Calculator className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm font-medium">Loan Tenure</span>
+                        </div>
+                        <p className="mt-2 text-2xl font-bold">
+                          {loanTerm} years
+                          <span className="text-sm text-muted-foreground">
+                            {" "}
+                            ({parseInt(loanTerm) * 12} months)
+                          </span>
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-sm font-medium">
+                            Estimated Payoff
+                          </span>
+                        </div>
+                        <p className="mt-2 text-2xl font-bold">
+                          Nov, {2024 + parseInt(loanTerm)}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card className="col-span-full md:col-span-1">
+                      <CardContent className="pt-6">
+                        <h3 className="text-lg font-semibold">
+                          Monthly Payment
+                        </h3>
+                        <p className="mt-2 text-3xl font-bold text-primary">
+                          RM {results.monthlyPayment.toFixed(2)}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Estimated monthly repayment
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <Card>
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-2">
+                            <Percent className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm font-medium">
+                              Total Interest
+                            </span>
+                          </div>
+                          <p className="mt-2 text-xl font-bold">
+                            RM {results.totalInterest.toFixed(2)}
+                          </p>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="pt-6">
+                          <div className="flex items-center gap-2">
+                            <Calculator className="h-4 w-4 text-muted-foreground" />
+                            <span className="text-sm font-medium">
+                              Total Payment
+                            </span>
+                          </div>
+                          <p className="mt-2 text-xl font-bold">
+                            RM {results.totalPayment.toFixed(2)}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="relative aspect-square">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center">
+                          <p className="text-sm font-medium">Total</p>
+                          <p className="text-lg font-bold">
+                            RM {results.totalPayment.toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                      <svg
+                        className="h-full w-full -rotate-90 transform"
+                        viewBox="0 0 100 100"
+                      >
+                        <circle
+                          className="fill-none stroke-primary"
+                          strokeWidth="12"
+                          cx="50"
+                          cy="50"
+                          r="40"
+                          strokeDasharray={`${
+                            (results.totalInterest / results.totalPayment) * 251.2
+                          } 251.2`}
+                        />
+                        <circle
+                          className="fill-none stroke-primary/20"
+                          strokeWidth="12"
+                          cx="50"
+                          cy="50"
+                          r="40"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <div className="h-4 w-4 rounded-full bg-primary" />
+                          <span className="text-sm">Principal</span>
+                          <span className="font-bold">
+                            RM {parseFloat(loanAmount).toFixed(2)}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="h-4 w-4 rounded-full bg-primary/20" />
+                          <span className="text-sm">Interest</span>
+                          <span className="font-bold">
+                            RM {results.totalInterest.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
+            //Personal Details Tab
+            <TabsContent value="personal">
+              <div className="flex h-[400px] items-center justify-center">
+                <p className="text-sm text-muted-foreground">
+                  Personal details form coming soon...
+                </p>
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={() => {
+              setCalculated(true)}
+            }
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            Calculate
+          </Button>
+        </CardContent>
+      </Card>
     </div>
+    
   );
 }
