@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Glow, GlowCapture } from "@codaworks/react-glow"
+//import { Glow, GlowCapture } from "@codaworks/react-glow"
 
 export default function Home() {
 
