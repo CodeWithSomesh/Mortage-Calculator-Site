@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/select"
 import Image from "next/image"
 import HomeLoanImage from "../assets/images/HomeLoan.png"
+import HouseMortgage from "../assets/images/HouseMortgage.png"
+import MoneyManagement from "../assets/images/MoneyManagement.png"
 import { motion, useAnimation} from "framer-motion"
 
 export default function Home() {
@@ -50,11 +52,11 @@ export default function Home() {
       //<Glow>
         <div className="w-full bg-black min-h-screen glow:bg-cyan-300">
           <div className="relative mx-auto max-w-5xl p-4 md:p-6 lg:p-8">
+            
+            {/* HomeLoan Image */}
             <motion.div className="absolute xs:hidden -right-[5%] top-0 z-50"
               drag
               >
-
-              {/* md:right-[240px] md:top-[90px] lg:right-[240px] lg:top-[90px] */}
               <Image
                 src={HomeLoanImage}
                 alt="Illustration of home loan concept"
@@ -64,6 +66,23 @@ export default function Home() {
                 draggable="false"
               />
             </motion.div>
+
+            {/* HouseMortgage Image*/}
+            <motion.div className="absolute xs:hidden -left-[5%] bottom-[0%] z-50"
+              drag
+              >
+              <Image
+                src={HouseMortgage}
+                alt="Illustration of home loan concept"
+                width={150}
+                height={75}
+                className=""
+                draggable="false"
+              />
+            </motion.div>
+
+            
+
 
             <Card>
               <CardHeader className="-mb-4">
