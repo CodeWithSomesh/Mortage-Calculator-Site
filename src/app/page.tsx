@@ -81,7 +81,19 @@ export default function Home() {
               />
             </motion.div>
 
-            
+            {/* MoneyManagement Image*/}
+            <motion.div className="absolute xs:hidden -right-[15%] top-[50%] z-50"
+              drag
+              >
+              <Image
+                src={MoneyManagement}
+                alt="Illustration of home loan concept"
+                width={250}
+                height={75}
+                className=""
+                draggable="false"
+              />
+            </motion.div>
 
 
             <Card>
