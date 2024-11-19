@@ -204,23 +204,13 @@ export default function Home() {
                           </Card>
                         </div>
 
-                        <div className="grid gap-4 md:grid-cols-[35%_63%]">
-                          <Card className="col-span-full md:col-span-1">
-                            <CardContent className="pt-6">
-                              <h3 className="text-lg font-bold">
-                                Monthly Payment
-                              </h3>
-                              <p className="mt-2 text-3xl font-bold text-primary">
-                                RM {Number(results.monthlyPayment.toFixed(2)).toLocaleString()}
-                              </p>
-                              <p className="text-lg text-muted-foreground">
-                                Estimated monthly repayment
-                              </p>
-                            </CardContent>
-                          </Card>
-                          <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-8 md:grid-cols-[43%_52%]">
+                          
+
+                          <div className="grid gap-4">
+
                             <Card>
-                              <CardContent className="pt-8">
+                              <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
                                 <div className="flex items-center gap-0 justify-center">
                                   <Percent className="h-6 w-8 text-muted-foreground" />
                                   <span className="text-lg text-center font-medium">
@@ -232,8 +222,10 @@ export default function Home() {
                                 </p>
                               </CardContent>
                             </Card>
+
+
                             <Card>
-                              <CardContent className="pt-8">
+                              <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
                                 <div className="flex items-center gap-0 justify-center">
                                   <Calculator className="h-6 w-8 text-muted-foreground" />
                                   <span className="text-lg text-center font-medium">
@@ -245,67 +237,107 @@ export default function Home() {
                                 </p>
                               </CardContent>
                             </Card>
+
+
+                            <Card>
+                              <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
+                                <h3 className="text-lg font-bold">
+                                  Monthly Payment
+                                </h3>
+                                <p className="mt-2 text-3xl font-bold text-primary">
+                                  RM {Number(results.monthlyPayment.toFixed(2)).toLocaleString()}
+                                </p>
+                                <p className="text-lg text-muted-foreground">
+                                  Estimated monthly repayment
+                                </p>
+                              </CardContent>
+                            </Card>
                           </div>
+
+
+                          <div className="grid gap-6">
+                            <div className="relative aspect-square">
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-center">
+                                  <p className="text-2xl font-bold italic">Total</p>
+                                  <p className="text-[28px] font-bold">
+                                    RM {Number(results.totalPayment.toFixed(2)).toLocaleString()}
+                                  </p>
+                                </div>
+                              </div>
+                              <svg
+                                className="h-full w-full -rotate-90 transform"
+                                viewBox="0 0 100 100"
+                              >
+                                <circle
+                                  className="fill-none stroke-[#D433F8]"
+                                  strokeWidth="20"
+                                  cx="50"
+                                  cy="50"
+                                  r="40"
+                                  strokeDasharray={`${
+                                    ((parseFloat(loanAmount) / results.totalPayment) * 251.2).toFixed(2)
+                                  } 251.2`}
+                                />
+                                <circle
+                                  className="fill-none stroke-[#47FFDF]"
+                                  strokeWidth="20"
+                                  cx="50"
+                                  cy="50"
+                                  r="40"
+                                  strokeDasharray={`${
+                                    ((results.totalInterest / results.totalPayment) * 251.2).toFixed(2)
+                                  } 251.2`}
+                                  strokeDashoffset={`-${
+                                    ((parseFloat(loanAmount) / results.totalPayment) * 251.2).toFixed(2)
+                                  }`}
+                                />
+                              </svg>
+                            </div>
+
+
+
+
+                            <div className="flex justify-between">
+                              <div className="text-center">
+                                <div className="flex items-center gap-2 justify-center">
+                                  <div className="h-4 w-4 rounded-full bg-[#D433F8]" />
+                                  <span className="text-xl">Principal</span>
+                                </div>
+
+                                <div className="font-bold text-xl mt-2">
+                                  RM {Number(parseFloat(loanAmount).toFixed(2)).toLocaleString()}  
+                                  <span className="ml-2 text-xl">
+                                    ({((parseFloat(loanAmount) / results.totalPayment) * 100).toFixed(2)}%)
+                                  </span>
+                                </div>
+                              </div>
+
+
+                              <div className="text-center">
+                                <div className="flex items-center gap-2 justify-center">
+                                  <div className="h-4 w-4 rounded-full bg-[#47FFDF]" />
+                                  <span className="text-xl">Interest</span>
+                                </div>
+                                
+                                <div className="font-bold text-xl mt-2">
+                                  RM {Number(results.totalInterest.toFixed(2)).toLocaleString()}
+                                  <span className="ml-2 text-xl mt-2">
+                                    ({((results.totalInterest / results.totalPayment) * 100).toFixed(2)}%)
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            
+
+
+                          </div>
+
+
                         </div>
 
-                        <div className="grid gap-4 md:grid-cols-2">
-                          <div className="relative aspect-square">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="text-center">
-                                <p className="text-2xl font-bold italic">Total</p>
-                                <p className="text-3xl font-bold">
-                                  RM {Number(results.totalPayment.toFixed(2)).toLocaleString()}
-                                </p>
-                              </div>
-                            </div>
-                            <svg
-                              className="h-full w-full -rotate-90 transform"
-                              viewBox="0 0 100 100"
-                            >
-                              <circle
-                                className="fill-none stroke-[#D433F8]"
-                                strokeWidth="20"
-                                cx="50"
-                                cy="50"
-                                r="40"
-                                strokeDasharray={`${
-                                  ((parseFloat(loanAmount) / results.totalPayment) * 251.2).toFixed(2)
-                                } 251.2`}
-                              />
-                              <circle
-                                className="fill-none stroke-[#47FFDF]"
-                                strokeWidth="20"
-                                cx="50"
-                                cy="50"
-                                r="40"
-                                strokeDasharray={`${
-                                  ((results.totalInterest / results.totalPayment) * 251.2).toFixed(2)
-                                } 251.2`}
-                                strokeDashoffset={`-${
-                                  ((parseFloat(loanAmount) / results.totalPayment) * 251.2).toFixed(2)
-                                }`}
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex items-center justify-center">
-                            <div className="space-y-4">
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full bg-[#D433F8]" />
-                                <span className="text-sm">Principal</span>
-                                <span className="font-bold">
-                                  RM {parseFloat(loanAmount).toFixed(2)}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div className="h-4 w-4 rounded-full bg-[#47FFDF] " />
-                                <span className="text-sm">Interest</span>
-                                <span className="font-bold">
-                                  RM {results.totalInterest.toFixed(2)}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        
                       </div>
                     )}
                   </TabsContent>
