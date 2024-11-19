@@ -18,7 +18,7 @@ import Image from "next/image"
 import HomeLoanImage from "../assets/images/HomeLoan.png"
 import HouseMortgage from "../assets/images/HouseMortgage.png"
 import MoneyManagement from "../assets/images/MoneyManagement.png"
-import { motion, useAnimation} from "framer-motion"
+import { motion} from "framer-motion"
 
 export default function Home() {
 
@@ -167,22 +167,22 @@ export default function Home() {
                         <div className="grid gap-4 md:grid-cols-3">
                           <Card>
                             <CardContent className="pt-6">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm font-medium">Loan Start</span>
+                              <div className="flex items-center gap-0 justify-center">
+                                <Calendar className="h-6 w-8 text-muted-foreground" />
+                                <span className="text-lg text-center font-medium">Loan Start</span>
                               </div>
-                              <p className="mt-2 text-2xl font-bold">Nov, 2024</p>
+                              <p className="mt-5 text-2xl font-bold text-center">November, 2024</p>
                             </CardContent>
                           </Card>
                           <Card>
                             <CardContent className="pt-6">
-                              <div className="flex items-center gap-2">
-                                <Calculator className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm font-medium">Loan Tenure</span>
+                              <div className="flex items-center gap-0 justify-center">
+                                <Calculator className="h-6 w-8 text-muted-foreground" />
+                                <span className="text-lg font-medium">Loan Tenure</span>
                               </div>
-                              <p className="mt-2 text-2xl font-bold">
+                              <p className="mt-5 text-2xl font-bold text-center">
                                 {loanTerm} years
-                                <span className="text-sm text-muted-foreground">
+                                <span className="text-lg text-muted-foreground">
                                   {" "}
                                   ({parseInt(loanTerm) * 12} months)
                                 </span>
@@ -191,57 +191,57 @@ export default function Home() {
                           </Card>
                           <Card>
                             <CardContent className="pt-6">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm font-medium">
+                              <div className="flex items-center gap-0 justify-center">
+                                <Calendar className="h-6 w-8 text-muted-foreground" />
+                                <span className="text-lg text-center font-medium">
                                   Estimated Payoff
                                 </span>
                               </div>
-                              <p className="mt-2 text-2xl font-bold">
-                                Nov, {2024 + parseInt(loanTerm)}
+                              <p className="mt-5 text-2xl font-bold text-center">
+                                November, {2024 + parseInt(loanTerm)}
                               </p>
                             </CardContent>
                           </Card>
                         </div>
 
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-4 md:grid-cols-[35%_63%]">
                           <Card className="col-span-full md:col-span-1">
                             <CardContent className="pt-6">
-                              <h3 className="text-lg font-semibold">
+                              <h3 className="text-lg font-bold">
                                 Monthly Payment
                               </h3>
                               <p className="mt-2 text-3xl font-bold text-primary">
-                                RM {results.monthlyPayment.toFixed(2)}
+                                RM {Number(results.monthlyPayment.toFixed(2)).toLocaleString()}
                               </p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-lg text-muted-foreground">
                                 Estimated monthly repayment
                               </p>
                             </CardContent>
                           </Card>
                           <div className="grid gap-4 md:grid-cols-2">
                             <Card>
-                              <CardContent className="pt-12">
-                                <div className="flex items-center gap-2">
-                                  <Percent className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm font-medium">
+                              <CardContent className="pt-8">
+                                <div className="flex items-center gap-0 justify-center">
+                                  <Percent className="h-6 w-8 text-muted-foreground" />
+                                  <span className="text-lg text-center font-medium">
                                     Total Interest
                                   </span>
                                 </div>
-                                <p className="mt-2 text-xl font-bold">
-                                  RM {results.totalInterest.toFixed(2)}
+                                <p className="mt-5 text-2xl font-bold text-center">
+                                  RM {Number(results.totalInterest.toFixed(2)).toLocaleString()}
                                 </p>
                               </CardContent>
                             </Card>
                             <Card>
-                              <CardContent className="pt-12">
-                                <div className="flex items-center gap-2">
-                                  <Calculator className="h-4 w-4 text-muted-foreground" />
-                                  <span className="text-sm font-medium">
+                              <CardContent className="pt-8">
+                                <div className="flex items-center gap-0 justify-center">
+                                  <Calculator className="h-6 w-8 text-muted-foreground" />
+                                  <span className="text-lg text-center font-medium">
                                     Total Payment
                                   </span>
                                 </div>
-                                <p className="mt-2 text-xl font-bold">
-                                  RM {results.totalPayment.toFixed(2)}
+                                <p className="mt-5 text-2xl font-bold text-center">
+                                  RM {Number(results.totalPayment.toFixed(2)).toLocaleString()}
                                 </p>
                               </CardContent>
                             </Card>
@@ -252,9 +252,9 @@ export default function Home() {
                           <div className="relative aspect-square">
                             <div className="absolute inset-0 flex items-center justify-center">
                               <div className="text-center">
-                                <p className="text-sm font-medium">Total</p>
-                                <p className="text-lg font-bold">
-                                  RM {results.totalPayment.toFixed(2)}
+                                <p className="text-2xl font-bold italic">Total</p>
+                                <p className="text-3xl font-bold">
+                                  RM {Number(results.totalPayment.toFixed(2)).toLocaleString()}
                                 </p>
                               </div>
                             </div>
