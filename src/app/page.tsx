@@ -50,7 +50,49 @@ export default function Home() {
     
     //<GlowCapture>
       //<Glow>
-        <div className="w-full bg-black min-h-screen glow:bg-cyan-300">
+        <div className="w-full bg-black min-h-screen glow:bg-cyan-300 relative">
+
+          {/* MoneyManagement Image*/}
+          <motion.div className="absolute xs:hidden right-[2%] top-[60%] z-50"
+            drag initial={{translateY: 0}}
+            animate={{translateY: [0, -60, 0]}}
+            transition={{
+              duration: 5,
+              ease: "linear",
+              repeat: Infinity,
+            }}
+              >
+              <Image
+                src={MoneyManagement}
+                alt="Illustration of home loan concept"
+                width={270}
+                height={25}
+                className=""
+                draggable="false"
+              />
+          </motion.div>
+
+          {/* HouseMortgage Image*/}
+          <motion.div className="absolute xs:hidden left-[4%] bottom-[9%] z-50"
+              initial={{translateY: 0}}
+              animate={{translateY: [0, 60, 0]}}
+              transition={{
+                duration: 5,
+                ease: "linear",
+                repeat: Infinity,
+              }} drag
+              >
+              <Image
+                src={HouseMortgage}
+                alt="Illustration of home loan concept"
+                width={200}
+                height={75}
+                className=""
+                draggable="false"
+              />
+            </motion.div>
+
+
           <div className="relative mx-auto max-w-5xl p-4 md:p-6 lg:p-8">
             
             {/* HomeLoan Image */}
@@ -66,35 +108,6 @@ export default function Home() {
                 draggable="false"
               />
             </motion.div>
-
-            {/* HouseMortgage Image*/}
-            <motion.div className="absolute xs:hidden -left-[5%] bottom-[0%] z-50"
-              drag
-              >
-              <Image
-                src={HouseMortgage}
-                alt="Illustration of home loan concept"
-                width={150}
-                height={75}
-                className=""
-                draggable="false"
-              />
-            </motion.div>
-
-            {/* MoneyManagement Image*/}
-            <motion.div className="absolute xs:hidden -right-[15%] top-[50%] z-50"
-              drag
-              >
-              <Image
-                src={MoneyManagement}
-                alt="Illustration of home loan concept"
-                width={250}
-                height={75}
-                className=""
-                draggable="false"
-              />
-            </motion.div>
-
 
             <Card>
               <CardHeader className="-mb-4">
