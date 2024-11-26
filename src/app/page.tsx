@@ -19,18 +19,50 @@ import HomeLoanImage from "../assets/images/HomeLoan.png"
 import HouseMortgage from "../assets/images/HouseMortgage.png"
 import MoneyManagement from "../assets/images/MoneyManagement.png"
 import { motion} from "framer-motion"
+import {
+  useForm
+} from "react-hook-form"
+import {
+  zodResolver
+} from "@hookform/resolvers/zod"
+import * as z from "zod"
+import {
+  toast
+} from "sonner"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
+const formSchema = z.object({
+  loanAmount: z.number().min(1).max(9999999999),
+  interestRate: z.number().min(0.01).max(20.99),
+  loanTenure: z.number().min(1).max(50)
+});
 
 export default function Home() {
 
-  const [loanAmount, setLoanAmount] = useState("500000")
-  const [interestRate, setInterestRate] = useState("4")
-  const [loanTerm, setLoanTerm] = useState("30")
+  //Initialize and Set state for variables
+  const [loanAmount, setLoanAmount] = useState(0.00)
+  const [interestRate, setInterestRate] = useState(0.00)
+  const [loanTerm, setLoanTerm] = useState(0)
+  const [valid, setValidated] = useState(false)
   const [calculated, setCalculated] = useState(false)
 
+  if (calculated && loanAmount && loanTerm && interestRate){
+    setValidated(true);
+  }
+
+  //Calculate Loan Payments
   const calculateLoan = () => {
-    const principal = parseFloat(loanAmount)
-    const rate = parseFloat(interestRate) / 100 / 12
-    const months = parseFloat(loanTerm) * 12
+    const principal = loanAmount
+    const rate = interestRate / 100 / 12
+    const months = loanTerm * 12
     const monthlyPayment =
       (principal * rate * Math.pow(1 + rate, months)) /
       (Math.pow(1 + rate, months) - 1)
@@ -44,7 +76,34 @@ export default function Home() {
     }
   }
 
+  //Set the Loan Payments into the "results" object
   const results = calculateLoan()
+
+  //Intializing Zod Form Schema 
+  const form = useForm < z.infer < typeof formSchema >> ({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      loanAmount: 0.00,
+      interestRate: 0.00,
+      loanTenure: 0,
+    },
+  })
+
+  //Form Submit Valication
+  function onSubmit(values: z.infer < typeof formSchema > ) {
+    try {
+      console.log(values);
+      toast(
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
+        </pre>
+      );
+    } catch (error) {
+      console.log("Form submission error");
+      toast.error("Failed to submit the form. Please try again.");
+    }
+  }
+
 
   return (
     
@@ -134,7 +193,284 @@ export default function Home() {
                   </TabsList>
 
                   <TabsContent value="mortgage" className="space-y-6 mt-4">
-                    <div className="grid gap-6 md:grid-cols-3">
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full mt-6">
+                        
+                        <div className="grid grid-cols-12 gap-4">
+                          
+                          <div className="col-span-4">
+                            
+                            <FormField
+                              control={form.control}
+                              name="loanAmount"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-lg">Loan Amount (RM)</FormLabel>
+                                  <FormControl>
+                                    <Input 
+                                    placeholder="500,000"
+                                    type="number"
+                                    {...field}
+                                    onChange={(e) => {
+                                      setLoanAmount(Number(e.target.value))
+                                      field.onChange(Number(e.target.value))
+                                    }}
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-md" />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                            
+                          <div className="col-span-4">
+                              
+                            <FormField
+                              control={form.control}
+                              name="interestRate"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-lg">Interest Rate (%)</FormLabel>
+                                  <FormControl>
+                                    <Input 
+                                    placeholder="3.00"
+                                    type="number"
+                                    {...field}
+                                    onChange={(e) => {
+                                      setInterestRate(Number(e.target.value))
+                                      field.onChange(Number(e.target.value))
+                                    }}
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-md" />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                            
+                          <div className="col-span-4">
+                              
+                            <FormField
+                              control={form.control}
+                              name="loanTenure"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-lg">Loan Tenure (years)</FormLabel>
+                                  <FormControl>
+                                    <Input 
+                                    placeholder="30 years"
+                                    type="number"
+                                    {...field} 
+                                    onChange={(e) => {
+                                      setLoanTerm(Number(e.target.value))
+                                      field.onChange(Number(e.target.value))
+                                    }}
+                                    />
+                                  </FormControl>
+                                  <FormMessage className="text-md" />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                            
+                        </div>
+
+                        {valid && (
+                          <div className="space-y-6">
+                            <div className="grid gap-4 md:grid-cols-3">
+                              <Card>
+                                <CardContent className="pt-6">
+                                  <div className="flex items-center gap-0 justify-center">
+                                    <Calendar className="h-6 w-8 text-muted-foreground" />
+                                    <span className="text-lg text-center font-medium">Loan Start</span>
+                                  </div>
+                                  <p className="mt-5 text-2xl font-bold text-center">November, 2024</p>
+                                </CardContent>
+                              </Card>
+                              <Card>
+                                <CardContent className="pt-6">
+                                  <div className="flex items-center gap-0 justify-center">
+                                    <Calculator className="h-6 w-8 text-muted-foreground" />
+                                    <span className="text-lg font-medium">Loan Tenure</span>
+                                  </div>
+                                  <p className="mt-5 text-2xl font-bold text-center">
+                                    {loanTerm} years
+                                    <span className="text-lg text-muted-foreground">
+                                      {" "}
+                                      ({loanTerm * 12} months)
+                                    </span>
+                                  </p>
+                                </CardContent>
+                              </Card>
+                              <Card>
+                                <CardContent className="pt-6">
+                                  <div className="flex items-center gap-0 justify-center">
+                                    <Calendar className="h-6 w-8 text-muted-foreground" />
+                                    <span className="text-lg text-center font-medium">
+                                      Estimated Payoff
+                                    </span>
+                                  </div>
+                                  <p className="mt-5 text-2xl font-bold text-center">
+                                    November, {2024 + loanTerm}
+                                  </p>
+                                </CardContent>
+                              </Card>
+                            </div>
+
+                            <div className="grid gap-8 md:grid-cols-[43%_52%]">
+                              
+
+                              <div className="grid gap-4">
+
+                                <Card>
+                                  <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
+                                    <div className="flex items-center gap-0 justify-center">
+                                      <Percent className="h-6 w-8 text-muted-foreground" />
+                                      <span className="text-lg text-center font-medium">
+                                        Total Interest
+                                      </span>
+                                    </div>
+                                    <p className="mt-5 text-2xl font-bold text-center">
+                                      RM {Number(results.totalInterest.toFixed(2)).toLocaleString()}
+                                    </p>
+                                  </CardContent>
+                                </Card>
+
+
+                                <Card>
+                                  <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
+                                    <div className="flex items-center gap-0 justify-center">
+                                      <Calculator className="h-6 w-8 text-muted-foreground" />
+                                      <span className="text-lg text-center font-medium">
+                                        Total Payment
+                                      </span>
+                                    </div>
+                                    <p className="mt-5 text-2xl font-bold text-center">
+                                      RM {Number(results.totalPayment.toFixed(2)).toLocaleString()}
+                                    </p>
+                                  </CardContent>
+                                </Card>
+
+
+                                <Card>
+                                  <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
+                                    <h3 className="text-lg font-bold">
+                                      Monthly Payment
+                                    </h3>
+                                    <p className="mt-2 text-3xl font-bold text-primary">
+                                      RM {Number(results.monthlyPayment.toFixed(2)).toLocaleString()}
+                                    </p>
+                                    <p className="text-lg text-muted-foreground">
+                                      Estimated monthly repayment
+                                    </p>
+                                  </CardContent>
+                                </Card>
+                              </div>
+
+
+                              <div className="grid gap-6">
+                                <div className="relative aspect-square">
+                                  <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="text-center">
+                                      <p className="text-2xl font-bold italic">Total</p>
+                                      <p className="text-[28px] font-bold">
+                                        RM {Number(results.totalPayment.toFixed(2)).toLocaleString()}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <svg
+                                    className="h-full w-full -rotate-90 transform"
+                                    viewBox="0 0 100 100"
+                                  >
+                                    <circle
+                                      className="fill-none stroke-[#D433F8]"
+                                      strokeWidth="20"
+                                      cx="50"
+                                      cy="50"
+                                      r="40"
+                                      strokeDasharray={`${
+                                        ((loanAmount / results.totalPayment) * 251.2).toFixed(2)
+                                      } 251.2`}
+                                    />
+                                    <circle
+                                      className="fill-none stroke-[#47FFDF]"
+                                      strokeWidth="20"
+                                      cx="50"
+                                      cy="50"
+                                      r="40"
+                                      strokeDasharray={`${
+                                        ((results.totalInterest / results.totalPayment) * 251.2).toFixed(2)
+                                      } 251.2`}
+                                      strokeDashoffset={`-${
+                                        ((loanAmount / results.totalPayment) * 251.2).toFixed(2)
+                                      }`}
+                                    />
+                                  </svg>
+                                </div>
+
+
+
+
+                                <div className="flex justify-between">
+                                  <div className="text-center">
+                                    <div className="flex items-center gap-2 justify-center">
+                                      <div className="h-4 w-4 rounded-full bg-[#D433F8]" />
+                                      <span className="text-xl">Principal</span>
+                                    </div>
+
+                                    <div className="font-bold text-xl mt-2">
+                                      RM {Number(loanAmount.toFixed(2)).toLocaleString()}  
+                                      <span className="ml-2 text-xl">
+                                        ({((loanAmount / results.totalPayment) * 100).toFixed(2)}%)
+                                      </span>
+                                    </div>
+                                  </div>
+
+
+                                  <div className="text-center">
+                                    <div className="flex items-center gap-2 justify-center">
+                                      <div className="h-4 w-4 rounded-full bg-[#47FFDF]" />
+                                      <span className="text-xl">Interest</span>
+                                    </div>
+                                    
+                                    <div className="font-bold text-xl mt-2">
+                                      RM {Number(results.totalInterest.toFixed(2)).toLocaleString()}
+                                      <span className="ml-2 text-xl mt-2">
+                                        ({((results.totalInterest / results.totalPayment) * 100).toFixed(2)}%)
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                
+
+
+                              </div>
+
+
+                            </div>
+
+                            
+                          </div>
+                        )}
+
+                        <Button
+                          type="submit"
+                          className="w-full text-xl font-bold py-6"
+                          size="lg"
+                          onClick={() => {
+                              setCalculated(true);
+                          }}
+                        >
+                          Calculate
+                        </Button>
+                      </form>
+                    </Form>
+
+
+
+
+                    {/* <div className="grid gap-6 md:grid-cols-3">
                       <div className="space-y-2">
                         <Label className="text-lg" htmlFor="loan-amount">Loan Amount (RM)</Label>
                         <Input
@@ -173,186 +509,9 @@ export default function Home() {
                           </SelectContent>
                         </Select>
                       </div>
-                    </div>
+                    </div> */}
 
-                    {calculated && (
-                      <div className="space-y-6">
-                        <div className="grid gap-4 md:grid-cols-3">
-                          <Card>
-                            <CardContent className="pt-6">
-                              <div className="flex items-center gap-0 justify-center">
-                                <Calendar className="h-6 w-8 text-muted-foreground" />
-                                <span className="text-lg text-center font-medium">Loan Start</span>
-                              </div>
-                              <p className="mt-5 text-2xl font-bold text-center">November, 2024</p>
-                            </CardContent>
-                          </Card>
-                          <Card>
-                            <CardContent className="pt-6">
-                              <div className="flex items-center gap-0 justify-center">
-                                <Calculator className="h-6 w-8 text-muted-foreground" />
-                                <span className="text-lg font-medium">Loan Tenure</span>
-                              </div>
-                              <p className="mt-5 text-2xl font-bold text-center">
-                                {loanTerm} years
-                                <span className="text-lg text-muted-foreground">
-                                  {" "}
-                                  ({parseInt(loanTerm) * 12} months)
-                                </span>
-                              </p>
-                            </CardContent>
-                          </Card>
-                          <Card>
-                            <CardContent className="pt-6">
-                              <div className="flex items-center gap-0 justify-center">
-                                <Calendar className="h-6 w-8 text-muted-foreground" />
-                                <span className="text-lg text-center font-medium">
-                                  Estimated Payoff
-                                </span>
-                              </div>
-                              <p className="mt-5 text-2xl font-bold text-center">
-                                November, {2024 + parseInt(loanTerm)}
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
-
-                        <div className="grid gap-8 md:grid-cols-[43%_52%]">
-                          
-
-                          <div className="grid gap-4">
-
-                            <Card>
-                              <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
-                                <div className="flex items-center gap-0 justify-center">
-                                  <Percent className="h-6 w-8 text-muted-foreground" />
-                                  <span className="text-lg text-center font-medium">
-                                    Total Interest
-                                  </span>
-                                </div>
-                                <p className="mt-5 text-2xl font-bold text-center">
-                                  RM {Number(results.totalInterest.toFixed(2)).toLocaleString()}
-                                </p>
-                              </CardContent>
-                            </Card>
-
-
-                            <Card>
-                              <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
-                                <div className="flex items-center gap-0 justify-center">
-                                  <Calculator className="h-6 w-8 text-muted-foreground" />
-                                  <span className="text-lg text-center font-medium">
-                                    Total Payment
-                                  </span>
-                                </div>
-                                <p className="mt-5 text-2xl font-bold text-center">
-                                  RM {Number(results.totalPayment.toFixed(2)).toLocaleString()}
-                                </p>
-                              </CardContent>
-                            </Card>
-
-
-                            <Card>
-                              <CardContent className="h-full flex flex-col align-middle items-center justify-center py-4">
-                                <h3 className="text-lg font-bold">
-                                  Monthly Payment
-                                </h3>
-                                <p className="mt-2 text-3xl font-bold text-primary">
-                                  RM {Number(results.monthlyPayment.toFixed(2)).toLocaleString()}
-                                </p>
-                                <p className="text-lg text-muted-foreground">
-                                  Estimated monthly repayment
-                                </p>
-                              </CardContent>
-                            </Card>
-                          </div>
-
-
-                          <div className="grid gap-6">
-                            <div className="relative aspect-square">
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="text-center">
-                                  <p className="text-2xl font-bold italic">Total</p>
-                                  <p className="text-[28px] font-bold">
-                                    RM {Number(results.totalPayment.toFixed(2)).toLocaleString()}
-                                  </p>
-                                </div>
-                              </div>
-                              <svg
-                                className="h-full w-full -rotate-90 transform"
-                                viewBox="0 0 100 100"
-                              >
-                                <circle
-                                  className="fill-none stroke-[#D433F8]"
-                                  strokeWidth="20"
-                                  cx="50"
-                                  cy="50"
-                                  r="40"
-                                  strokeDasharray={`${
-                                    ((parseFloat(loanAmount) / results.totalPayment) * 251.2).toFixed(2)
-                                  } 251.2`}
-                                />
-                                <circle
-                                  className="fill-none stroke-[#47FFDF]"
-                                  strokeWidth="20"
-                                  cx="50"
-                                  cy="50"
-                                  r="40"
-                                  strokeDasharray={`${
-                                    ((results.totalInterest / results.totalPayment) * 251.2).toFixed(2)
-                                  } 251.2`}
-                                  strokeDashoffset={`-${
-                                    ((parseFloat(loanAmount) / results.totalPayment) * 251.2).toFixed(2)
-                                  }`}
-                                />
-                              </svg>
-                            </div>
-
-
-
-
-                            <div className="flex justify-between">
-                              <div className="text-center">
-                                <div className="flex items-center gap-2 justify-center">
-                                  <div className="h-4 w-4 rounded-full bg-[#D433F8]" />
-                                  <span className="text-xl">Principal</span>
-                                </div>
-
-                                <div className="font-bold text-xl mt-2">
-                                  RM {Number(parseFloat(loanAmount).toFixed(2)).toLocaleString()}  
-                                  <span className="ml-2 text-xl">
-                                    ({((parseFloat(loanAmount) / results.totalPayment) * 100).toFixed(2)}%)
-                                  </span>
-                                </div>
-                              </div>
-
-
-                              <div className="text-center">
-                                <div className="flex items-center gap-2 justify-center">
-                                  <div className="h-4 w-4 rounded-full bg-[#47FFDF]" />
-                                  <span className="text-xl">Interest</span>
-                                </div>
-                                
-                                <div className="font-bold text-xl mt-2">
-                                  RM {Number(results.totalInterest.toFixed(2)).toLocaleString()}
-                                  <span className="ml-2 text-xl mt-2">
-                                    ({((results.totalInterest / results.totalPayment) * 100).toFixed(2)}%)
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-
-                            
-
-
-                          </div>
-
-
-                        </div>
-
-                        
-                      </div>
-                    )}
+                    
                   </TabsContent>
 
                   <TabsContent value="personal" >
@@ -367,7 +526,7 @@ export default function Home() {
                   </TabsContent>
                 </Tabs>
 
-                <Button
+                {/* <Button
                   className="w-full text-xl font-bold py-6"
                   size="lg"
                   onClick={() => {
@@ -375,7 +534,7 @@ export default function Home() {
                   }
                 >
                   Calculate
-                </Button>
+                </Button> */}
               </CardContent>
             </Card>
             
