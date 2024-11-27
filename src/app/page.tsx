@@ -182,7 +182,7 @@ export default function Home() {
         <BackgroundGradient>
         
           {/* HomeLoan Image */}
-          <motion.div className="absolute xs:hidden -right-[5%] top-0 z-50"
+          <motion.div className="absolute xs:hidden -right-[8%] -top-[10%] z-50"
             drag
             >
             <Image
