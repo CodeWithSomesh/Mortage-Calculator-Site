@@ -39,6 +39,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 
+
 const formSchema = z.object({
   loanAmount: z.number().min(1).max(999999999),
   interestRate: z.number().min(0.01).max(20.99),
@@ -122,7 +123,7 @@ export default function Home() {
     <div className="w-full bg-black min-h-screen glow:bg-cyan-300 relative">
 
       {/* MoneyManagement Image*/}
-      <motion.div className="absolute xs:hidden right-[2%] top-[60%] z-50"
+      <motion.div className="absolute xs:hidden right-[2%] top-[58%] z-50"
         drag initial={{translateY: 0}}
         animate={{translateY: [0, -60, 0]}}
         transition={{
@@ -142,7 +143,7 @@ export default function Home() {
       </motion.div>
 
       {/* HouseMortgage Image*/}
-      <motion.div className="absolute xs:hidden left-[4%] bottom-[9%] z-50"
+      <motion.div className="absolute xs:hidden left-[4%] bottom-[11%] z-50"
           initial={{translateY: 0}}
           animate={{translateY: [0, 60, 0]}}
           transition={{
