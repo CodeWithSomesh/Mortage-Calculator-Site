@@ -4,16 +4,16 @@ import { useState, useEffect } from "react"
 import { Calculator, Calendar, Percent } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+//import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select"
 import Image from "next/image"
 import HomeLoanImage from "../assets/images/HomeLoan.png"
 import HouseMortgage from "../assets/images/HouseMortgage.png"
@@ -32,7 +32,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -112,7 +111,7 @@ export default function Home() {
   };
 
   // Handle invalid submission
-  const onInvalidSubmit = (errors: any) => {
+  const onInvalidSubmit = (errors: unknown) => {
     setValidated(false); // Set form as invalid
     console.log("Validation errors:", errors);
     toast.error("Validation failed. Please correct the errors.");
